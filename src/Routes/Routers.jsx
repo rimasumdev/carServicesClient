@@ -8,10 +8,12 @@ import Services from "../Pages/Services/Services";
 import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
 import CheckOut from "../Pages/Checkout/Checkout";
+import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Main />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
@@ -44,6 +46,13 @@ const router = createBrowserRouter([
       {
         path: "/checkout/:serviceId",
         element: <CheckOut />,
+        errorElement: <ErrorPage />,
+        // loader: async ({ params }) => {
+        //   const response = await fetch(
+        //     `http://localhost:3000/services/${params.serviceId}`
+        //   );
+        //   return response.json();
+        // },
         loader: ({ params }) =>
           fetch(`http://localhost:3000/services/${params.serviceId}`),
       },

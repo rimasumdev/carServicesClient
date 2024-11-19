@@ -56,7 +56,7 @@ const Nav = () => {
   return (
     <div className="sticky top-0 z-50 shadow-lg bg-base-100">
       <div className="navbar container mx-auto">
-        <div className="navbar-start space-x-2 w-2/3">
+        <div className="navbar-start space-x-2">
           <FaCar className="text-primary text-2xl" />
           <Link to="/" className="text-xl font-bold text-primary uppercase">
             Car Doctor
@@ -67,7 +67,7 @@ const Nav = () => {
             {navItems}
           </ul>
         </div>
-        <div className="navbar-end lg:hidden w-1/3">
+        <div className="navbar-end lg:hidden">
           <div className="dropdown">
             <div
               tabIndex={0}
