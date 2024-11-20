@@ -31,7 +31,12 @@ const Nav = () => {
     { path: "/blog", label: "Blog" },
     { path: "/contact", label: "Contact" },
     {
-      path: user ? "/" : "/login",
+      path: "/orders",
+      label: "My Orders",
+      className: !user ? "hidden" : "block",
+    },
+    {
+      path: "/login",
       label: user ? "Logout" : "Login",
       onClick: user ? handleLogout : null,
       className: "btn btn-outline btn-primary px-6",

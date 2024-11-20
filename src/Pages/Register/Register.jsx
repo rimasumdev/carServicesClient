@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { updateProfile } from "firebase/auth";
 import { FaFacebook, FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import AuthContext from "../../AuthProvider/AuthContext";
@@ -16,6 +17,9 @@ const Register = () => {
     createUser(email, password)
       .then((result) => {
         console.log(result.user);
+        updateProfile(result.user, {
+          displayName: name,
+        });
       })
       .catch((error) => {
         console.log(error);

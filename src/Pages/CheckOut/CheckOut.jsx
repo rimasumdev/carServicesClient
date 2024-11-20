@@ -2,11 +2,14 @@ import { useLoaderData } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../../AuthProvider/AuthContext";
 import axios from "axios";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 const Checkout = () => {
   const service = useLoaderData();
-  const currentDate = new Date().toISOString().split("T")[0]; // yyyy-mm-dd format for input field
+  const currentDate = new Date().toISOString().split("T")[0];
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   // console.log(user);
 
   const handleCheckout = (e) => {
@@ -35,6 +38,10 @@ const Checkout = () => {
       .post("http://localhost:3000/orders", checkoutData)
       .then((res) => {
         console.log(res.data);
+        if (res.data.acknowledged) {
+          toast.success("Order placed successfully");
+          navigate("/orders");
+        }
       })
       .catch((error) => {
         console.error("Error submitting order:", error);
@@ -54,6 +61,7 @@ const Checkout = () => {
 
   return (
     <div className="container mx-auto ">
+      <ToastContainer autoClose={800} />
       {service ? (
         <div>
           {/* <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent py-1 mb-8">
@@ -123,6 +131,7 @@ const Checkout = () => {
                   <input
                     type="text"
                     name="customerName"
+                    defaultValue={user?.displayName}
                     placeholder="Your name"
                     className="input input-bordered"
                     required
