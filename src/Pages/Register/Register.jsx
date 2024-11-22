@@ -1,11 +1,16 @@
 import { Link } from "react-router-dom";
 import { updateProfile } from "firebase/auth";
 import { FaFacebook, FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import AuthContext from "../../AuthProvider/AuthContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 const Register = () => {
   const { createUser } = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -76,13 +81,23 @@ const Register = () => {
               </label>
               <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="Password"
                   className="input input-bordered w-full pl-10"
                   required
                 />
                 <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <span
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? (
+                    <BsFillEyeFill className="text-red-500" />
+                  ) : (
+                    <BsFillEyeSlashFill />
+                  )}
+                </span>
               </div>
               <label className="label">
                 <Link

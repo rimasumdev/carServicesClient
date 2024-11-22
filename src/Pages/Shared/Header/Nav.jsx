@@ -4,6 +4,7 @@ import { FaCar } from "react-icons/fa";
 import AuthContext from "../../../AuthProvider/AuthContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../../AxiosConfig/axios";
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
@@ -14,13 +15,15 @@ const Nav = () => {
   };
 
   const handleLogout = () => {
-    logout()
-      .then(() => {
-        navigate("/");
-      })
-      .catch((error) => {
-        console.error("Logout error:", error.message);
-      });
+    axiosInstance.post("/logout").then(() => {
+      logout()
+        .then(() => {
+          navigate("/");
+        })
+        .catch((error) => {
+          console.error("Logout error:", error.message);
+        });
+    });
     setIsOpen(false);
   };
 

@@ -47,7 +47,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/checkout/:serviceId",
-        element: <CheckOut />,
+        element: (
+          <PrivateRoutes>
+            <CheckOut />
+          </PrivateRoutes>
+        ),
         errorElement: <ErrorPage />,
         // loader: async ({ params }) => {
         //   const response = await fetch(

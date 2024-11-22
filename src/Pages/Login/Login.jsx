@@ -1,23 +1,42 @@
 import { FaFacebook, FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { Link, useNavigate } from "react-router-dom";
+import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import AuthContext from "../../AuthProvider/AuthContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import axiosInstance from "../../AxiosConfig/axios";
 const Login = () => {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle login logic here
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
-    const user = { email, password };
-    console.log(user);
+    // const user = { email, password };
+    // console.log(user);
     login(email, password)
       .then((result) => {
-        console.log(result.user);
-        navigate("/");
+        // console.log(result.user);
+        const loggedUser = {
+          email: result.user.email,
+          name: result.user.displayName,
+        };
+        axiosInstance
+          .post("/jwt", loggedUser)
+          .then((res) => {
+            console.log(res.data);
+            navigate(location?.state?.from || "/orders");
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
       })
       .catch((error) => {
         console.log(error.message);
@@ -60,13 +79,23 @@ const Login = () => {
               </label>
               <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="Password"
                   className="input input-bordered w-full pl-10"
                   required
                 />
                 <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <span
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? (
+                    <BsFillEyeFill className="text-red-500" />
+                  ) : (
+                    <BsFillEyeSlashFill />
+                  )}
+                </span>
               </div>
               <label className="label">
                 <Link
