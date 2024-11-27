@@ -5,9 +5,11 @@ import AuthContext from "../../../AuthProvider/AuthContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../AxiosConfig/axios";
+import useOrdersCart from "../../../Hooks/useOrdersCart";
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useContext(AuthContext);
+  const { orders } = useOrdersCart();
   const navigate = useNavigate();
 
   const handleMenuClick = () => {
@@ -35,7 +37,12 @@ const Nav = () => {
     { path: "/contact", label: "Contact" },
     {
       path: "/orders",
-      label: "My Orders",
+      label: (
+        <>
+          My Orders{" "}
+          <div className="badge badge-primary badge-lg">+{orders.length}</div>
+        </>
+      ),
       className: !user ? "hidden" : "block",
     },
     {
@@ -62,7 +69,7 @@ const Nav = () => {
     </>
   );
   return (
-    <div className="sticky top-0 z-50 shadow-lg bg-base-100">
+    <div className="sticky top-0 z-50 shadow-lg bg-base-100 w-full">
       <div className="navbar container mx-auto">
         <div className="navbar-start space-x-2">
           <FaCar className="text-primary text-2xl" />

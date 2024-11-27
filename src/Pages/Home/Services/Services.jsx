@@ -16,7 +16,7 @@ const Services = () => {
     fetch(url)
       .then((res) => res.json())
       .then((data) => setServices(data));
-  }, [search]);
+  }, [url]);
 
   const handleSearch = (e) => {
     e.preventDefault();

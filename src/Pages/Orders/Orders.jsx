@@ -3,9 +3,11 @@ import AuthContext from "../../AuthProvider/AuthContext";
 import axiosInstance from "../../AxiosConfig/axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import useOrdersCart from "../../Hooks/useOrdersCart";
 const Orders = () => {
   const { user, logout } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
+  const { refetch } = useOrdersCart();
   const navigate = useNavigate();
   const url = `/orders?email=${user?.email}`;
 
@@ -74,6 +76,7 @@ const Orders = () => {
               });
               const remaining = orders.filter((order) => order._id !== id);
               setOrders(remaining);
+              refetch();
             }
           })
           .catch((error) => {

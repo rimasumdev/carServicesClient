@@ -5,10 +5,12 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import useOrdersCart from "../../Hooks/useOrdersCart";
 const Checkout = () => {
   const service = useLoaderData();
   const currentDate = new Date().toISOString().split("T")[0];
   const { user } = useContext(AuthContext);
+  const { refetch } = useOrdersCart();
   const navigate = useNavigate();
   // console.log(user);
 
@@ -41,6 +43,7 @@ const Checkout = () => {
         if (res.data.acknowledged) {
           toast.success("Order placed successfully");
           navigate("/orders");
+          refetch();
         }
       })
       .catch((error) => {
