@@ -36,13 +36,18 @@ const Nav = () => {
     { path: "/blog", label: "Blog" },
     { path: "/contact", label: "Contact" },
     {
-      path: "/orders",
+      path: "/dashboard/my-bookings",
       label: (
         <>
           My Orders{" "}
           <div className="badge badge-primary badge-lg">+{orders.length}</div>
         </>
       ),
+      className: !user ? "hidden" : "block",
+    },
+    {
+      path: "/dashboard",
+      label: "Dashboard",
       className: !user ? "hidden" : "block",
     },
     {
@@ -70,14 +75,14 @@ const Nav = () => {
   );
   return (
     <div className="sticky top-0 z-50 shadow-lg bg-base-100 w-full">
-      <div className="navbar container mx-auto">
-        <div className="navbar-start space-x-2">
+      <div className="navbar container mx-auto justify-between">
+        <div className="navbar-start w-full lg:w-1/4 space-x-2">
           <FaCar className="text-primary text-2xl" />
           <Link to="/" className="text-xl font-bold text-primary uppercase">
             Car Doctor
           </Link>
         </div>
-        <div className="navbar-end hidden lg:flex">
+        <div className="navbar-end w-full lg:w-3/4 hidden lg:flex">
           <ul className="menu menu-horizontal px-1 space-x-2 items-center">
             {navItems}
           </ul>

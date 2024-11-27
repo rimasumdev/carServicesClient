@@ -11,6 +11,8 @@ import CheckOut from "../Pages/Checkout/Checkout";
 import Orders from "../Pages/Orders/Orders";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 import PrivateRoutes from "./PrivateRoutes";
+import Dashboard from "../Pages/Dashboard/Dashboard";
+import MyBookings from "../Pages/Dashboard/MyBookings";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -69,6 +71,20 @@ const router = createBrowserRouter([
             <Orders />
           </PrivateRoutes>
         ),
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoutes>
+        <Dashboard />
+      </PrivateRoutes>
+    ),
+    children: [
+      {
+        path: "/dashboard/my-bookings",
+        element: <MyBookings />,
       },
     ],
   },

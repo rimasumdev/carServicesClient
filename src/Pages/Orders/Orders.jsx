@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../AuthProvider/AuthContext";
 import axiosInstance from "../../AxiosConfig/axios";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import useOrdersCart from "../../Hooks/useOrdersCart";
 const Orders = () => {
   const { user, logout } = useContext(AuthContext);
@@ -10,6 +10,10 @@ const Orders = () => {
   const { refetch } = useOrdersCart();
   const navigate = useNavigate();
   const url = `/orders?email=${user?.email}`;
+  const totalPrice = orders.reduce(
+    (total, order) => total + Number(order.servicePrice.replace("$", "")),
+    0
+  );
 
   useEffect(() => {
     // Axios interceptor setup
@@ -107,16 +111,26 @@ const Orders = () => {
 
   return (
     <div className="container mx-auto mt-10 px-4">
-      <h1 className="text-2xl font-bold mb-8 text-center">
-        Your Orders: {orders.length}
-      </h1>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
+        <div className="flex flex-col md:flex-row gap-2 md:gap-4 items-center md:items-start">
+          <h2 className="text-xl md:text-2xl font-bold text-center md:text-left">
+            <span className="text-primary">Your Orders:</span> {orders.length}
+          </h2>
+          <h2 className="text-xl md:text-2xl font-bold text-center md:text-left">
+            <span className="text-primary">Total Price:</span> ${totalPrice}
+          </h2>
+        </div>
+        <Link to="/" className="btn btn-primary w-full md:w-auto">
+          Add New Order
+        </Link>
+      </div>
       {orders.length === 0 && (
         <h2 className="text-xl font-bold mb-8 text-center">No orders found</h2>
       )}
 
       {/* Large Screen Table View */}
       {orders.length > 0 && (
-        <div className="hidden md:block overflow-x-auto max-w-7xl mx-auto">
+        <div className="hidden md:block overflow-x-auto  mx-auto">
           <table className="table">
             <thead>
               <tr>

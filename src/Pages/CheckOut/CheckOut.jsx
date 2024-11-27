@@ -42,7 +42,7 @@ const Checkout = () => {
         console.log(res.data);
         if (res.data.acknowledged) {
           toast.success("Order placed successfully");
-          navigate("/orders");
+          navigate("/dashboard/my-bookings");
           refetch();
         }
       })
