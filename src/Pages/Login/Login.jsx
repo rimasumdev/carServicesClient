@@ -5,42 +5,44 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import AuthContext from "../../AuthProvider/AuthContext";
 import { useContext, useState } from "react";
 import axiosInstance from "../../AxiosConfig/axios";
+import { useForm } from "react-hook-form";
+
 const Login = () => {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle login logic here
-    const form = e.target;
-    const email = form.email.value;
-    const password = form.password.value;
-    // const user = { email, password };
-    // console.log(user);
-    login(email, password)
-      .then((result) => {
-        // console.log(result.user);
-        const loggedUser = {
-          email: result.user.email,
-          name: result.user.displayName,
-        };
-        axiosInstance
-          .post("/jwt", loggedUser)
-          .then((res) => {
-            console.log(res.data);
-            navigate(location?.state?.from || "/orders");
-          })
-          .catch((error) => {
-            console.log(error.message);
-          });
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+
+  const onSubmit = async (data) => {
+    try {
+      setLoginError("");
+      const result = await login(data.email, data.password);
+      const loggedUser = {
+        email: result.user.email,
+        name: result.user.displayName,
+      };
+
+      const response = await axiosInstance.post("/jwt", loggedUser);
+      console.log(response.data);
+      navigate(location?.state?.from || "/dashboard/my-bookings/");
+    } catch (error) {
+      console.log(error.message);
+      if (error.code === "auth/invalid-credential") {
+        setLoginError("Invalid email or password. Please try again.");
+      } else {
+        setLoginError("An error occurred during login. Please try again.");
+      }
+    }
   };
 
   return (
@@ -56,7 +58,26 @@ const Login = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          {loginError && (
+            <div className="alert alert-error text-white mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="stroke-current shrink-0 h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>{loginError}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -64,13 +85,23 @@ const Login = () => {
               <div className="relative">
                 <input
                   type="email"
-                  name="email"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
                   placeholder="Email"
                   className="input input-bordered w-full pl-10"
-                  required
                 />
                 <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               </div>
+              {errors.email && (
+                <span className="text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </span>
+              )}
             </div>
 
             <div className="form-control">
@@ -80,10 +111,15 @@ const Login = () => {
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  name="password"
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
                   placeholder="Password"
                   className="input input-bordered w-full pl-10"
-                  required
                 />
                 <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <span
@@ -97,6 +133,11 @@ const Login = () => {
                   )}
                 </span>
               </div>
+              {errors.password && (
+                <span className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </span>
+              )}
               <label className="label">
                 <Link
                   to="/forgot-password"
