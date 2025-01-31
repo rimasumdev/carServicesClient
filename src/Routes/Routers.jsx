@@ -7,7 +7,7 @@ import Blog from "../Pages/Blog/Blog";
 import Services from "../Pages/Services/Services";
 import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
-import CheckOut from "../Pages/Checkout/Checkout";
+import CheckOut from "../Pages/CheckOut/CheckOut";
 import Orders from "../Pages/Orders/Orders";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 import PrivateRoutes from "./PrivateRoutes";
